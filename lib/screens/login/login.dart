@@ -25,12 +25,14 @@ class _LoginScreenState extends State<LoginScreen>
   late TabController _tabController;
 
   double getScreenWidth(BuildContext context) {
-    return MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
+    print(width);
+    return width;
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isMobile = getScreenWidth(context) < 395;
+    bool isMobile = getScreenWidth(context) < 420;
     Widget login = Scaffold(
         appBar: AppBar(
             bottom: PreferredSize(
@@ -47,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen>
         //             child: SafeArea(child: TabBar(controller: _tabController, tabs: tabList))),
         // ),
         body: TabBarView(
-          children: tabList.map((tab) => _getTab(tab)).toList(),
+          children: tabList.map((tab) => _getTab(tab, isMobile)).toList(),
           controller: _tabController,
         ));
     // Container(
@@ -63,7 +65,8 @@ class _LoginScreenState extends State<LoginScreen>
     //   )
     // ]));
     // Widget login = loginMobileDevicesWidget;
-    if (!widget.isMobile) {
+    // if (!widget.isMobile) {
+    if (!isMobile) {
       login = Scaffold(
           body: Container(
         color: Colors.grey,
@@ -108,7 +111,9 @@ class _LoginScreenState extends State<LoginScreen>
                               controller: _tabController, tabs: tabList)),
                       Expanded(
                         child: TabBarView(
-                          children: tabList.map((tab) => _getTab(tab)).toList(),
+                          children: tabList
+                              .map((tab) => _getTab(tab, isMobile))
+                              .toList(),
                           controller: _tabController,
                         ),
                       )
@@ -138,8 +143,9 @@ Widget loginMobileDevicesWidget =
   getCardWrapper(EmailPasswordForm(), 16, 0, 8)
 ]);
 
-Widget _getTab(Tab tab) {
+Widget _getTab(Tab tab, bool isMobile) {
   Widget loginTab = loginMobileDevicesWidget;
+  bool isMobileDevice = isMobile;
   if (!isMobileDevice) {
     loginTab = EmailPasswordForm(buttonHeight: 50, isMobile: isMobileDevice);
 
