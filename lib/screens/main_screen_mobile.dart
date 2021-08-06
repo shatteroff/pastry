@@ -56,7 +56,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.supervised_user_circle),
-            label: 'Пол',
+            label: 'Пользователи',
           ),
         ],
         currentIndex: _selectedIndex,

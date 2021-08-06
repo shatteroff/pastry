@@ -12,7 +12,9 @@ class AppUser {
   AppUser.fromJson(Map<String, Object?> json)
       : this(
           id: json['id']! as String,
-          photoUrl: json['photo_url'] as String,
+          photoUrl: (json['photo_url'] == null)
+              ? defaultPhotoUrl
+              : json['photo_url'] as String,
           name: json['name']! as String,
           surname: json['surname']! as String,
         );

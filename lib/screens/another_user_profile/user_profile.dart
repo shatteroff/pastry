@@ -37,9 +37,7 @@ class _UserProfileState extends State<UserProfile> {
                 width: 150,
                 height: 150,
                 child: CachedNetworkImage(
-                  imageUrl: (widget.user.photoUrl == null)
-                      ? AppUser.defaultPhotoUrl
-                      : widget.user.photoUrl!,
+                  imageUrl: widget.user.photoUrl!,
                   imageBuilder: (context, imageProvider) => Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
