@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "772388364510",
+    "project_id": "pastry-a5c8a",
+    "storage_bucket": "pastry-a5c8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772388364510:android:e083253b9db4a32f94a24f",
+        "android_client_info": {
+          "package_name": "ru.shatteroff.pastry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772388364510-r017oj9g2os75guv11f5evdfbdugr37r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxU4GEnTjMAdkTpVIU2gkphVB8LKrPoVA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772388364510-r017oj9g2os75guv11f5evdfbdugr37r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

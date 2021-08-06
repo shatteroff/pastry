@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">772388364510-r017oj9g2os75guv11f5evdfbdugr37r.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">772388364510</string>
+    <string name="google_api_key" translatable="false">AIzaSyBxU4GEnTjMAdkTpVIU2gkphVB8LKrPoVA</string>
+    <string name="google_app_id" translatable="false">1:772388364510:android:e083253b9db4a32f94a24f</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBxU4GEnTjMAdkTpVIU2gkphVB8LKrPoVA</string>
+    <string name="google_storage_bucket" translatable="false">pastry-a5c8a.appspot.com</string>
+    <string name="project_id" translatable="false">pastry-a5c8a</string>
+</resources>
