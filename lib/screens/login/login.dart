@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen>
                           width: 400,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: Image.network('assets/images/cookie_light2.jpg').image,
+                                  image: AssetImage('assets/images/cookie_light2.jpg'),
                                   fit: BoxFit.cover)),
                         ),
                       ),
