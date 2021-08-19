@@ -30,31 +30,59 @@ class _OrdersState extends State<Orders> {
     // _getOrdersViaOrders().then((value) => setState(() {
     //       _orders = value;
     //     }));
+    Widget dropDownWidget = DropdownButton<String>(
+      value: _items[_itemNum],
+      isExpanded: widget.withAppBar ? true : false,
+      elevation: 16,
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          _itemNum = _items.indexOf(newValue!);
+        });
+        _getOrdersViaOrders().then((value) => setState(() {
+              _orders = value;
+            }));
+      },
+      items: _items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Center(child: Text(value)),
+        );
+      }).toList(),
+    );
     Widget body = Column(
       children: [
-        DropdownButton<String>(
-          value: _items[_itemNum],
-          isExpanded: true,
-          elevation: 16,
-          underline: Container(
-            height: 2,
-            color: Colors.deepPurpleAccent,
-          ),
-          onChanged: (String? newValue) {
-            setState(() {
-              _itemNum = _items.indexOf(newValue!);
-            });
-            _getOrdersViaOrders().then((value) => setState(() {
-                  _orders = value;
-                }));
-          },
-          items: _items.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Center(child: Text(value)),
-            );
-          }).toList(),
-        ),
+        widget.withAppBar
+            ? dropDownWidget
+            : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    dropDownWidget,
+                    ElevatedButton(
+                        onPressed: () async {
+                          Order order = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrderRegistration()));
+                          if (_itemNum == 1) {
+                            List<Order> orders = [order];
+                            if (_orders != null && _orders!.isNotEmpty) {
+                              orders.addAll(_orders!);
+                            }
+                            setState(() {
+                              // _listView = Center(child: Text('Success'));
+                              _orders = orders;
+                            });
+                          }
+                        },
+                        child: Text('Сделать заказ'))
+                  ],
+                ),
+            ),
         Expanded(
           child: RefreshIndicator(
               onRefresh: _updateList, child: getOrdersListView(_orders)),

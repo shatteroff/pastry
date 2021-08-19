@@ -45,7 +45,23 @@ class _PortfolioState extends State<Portfolio>
           ),
           body: body);
     } else {
-      return body;
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Портфолио',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                ElevatedButton(
+                    onPressed: _openFileExplorer,
+                    child: Text('Добавить фотографии'))
+              ],
+            ),
+            body
+          ],
+        ),
+      );
     }
   }
 
@@ -98,6 +114,7 @@ class _PortfolioState extends State<Portfolio>
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5),
               itemCount: value.length,
+              shrinkWrap: true,
               itemBuilder: (BuildContext ctx, index) {
                 return value[index % value.length];
               });
