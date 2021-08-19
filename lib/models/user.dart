@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pastry/main.dart';
 
 class AppUser {
-  AppUser({
-    required this.id,
-    this.photoUrl,
-    this.name,
-    this.surname,
-  });
+  AppUser(
+      {required this.id,
+      this.photoUrl,
+      this.name,
+      this.surname,
+      this.fullName});
 
   AppUser.fromJson(Map<String, Object?> json)
       : this(
@@ -17,12 +17,15 @@ class AppUser {
               : json['photo_url'] as String,
           name: json['name']! as String,
           surname: json['surname']! as String,
+          fullName:
+              (json['name']! as String) + " " + (json['surname']! as String),
         );
 
   AppUser.fromAuthUser(User authUser)
       : this(
           id: authUser.uid,
           photoUrl: authUser.photoURL,
+          fullName: authUser.displayName,
           name: (authUser.displayName == null ||
                   authUser.displayName!.trim().isEmpty)
               ? null
@@ -37,6 +40,7 @@ class AppUser {
   final String? photoUrl;
   String? name;
   String? surname;
+  String? fullName;
   static const String defaultPhotoUrl =
       'https://yt3.ggpht.com/a/AATXAJxgMqR_dhM4UdhhherXxKThSs3gXkKxEGIWMZpX4Q=s900-c-k-c0xffffffff-no-rj-mo';
 

@@ -5,7 +5,9 @@ import 'package:pastry/models/user.dart';
 import 'package:pastry/screens/another_user_profile/user_profile.dart';
 
 class UserList extends StatefulWidget {
-  const UserList({Key? key}) : super(key: key);
+  final bool withAppBar;
+
+  const UserList({Key? key, required this.withAppBar}) : super(key: key);
 
   @override
   _UserListState createState() => _UserListState();
@@ -22,18 +24,23 @@ class _UserListState extends State<UserList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Users'),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: RefreshIndicator(
-                  onRefresh: _updateList, child: _getUsersListView(_users)),
-            )
-          ],
-        ));
+    Widget body = Column(
+      children: [
+        Expanded(
+          child: RefreshIndicator(
+              onRefresh: _updateList, child: _getUsersListView(_users)),
+        )
+      ],
+    );
+    if (widget.withAppBar) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text('Users'),
+          ),
+          body: body);
+    } else {
+      return body;
+    }
   }
 
   Future _updateList() async {

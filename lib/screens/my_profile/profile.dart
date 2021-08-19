@@ -11,7 +11,9 @@ import 'package:pastry/main.dart';
 import 'package:pastry/models/user.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+  final bool withAppBar;
+
+  const Profile({Key? key, required this.withAppBar}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -39,65 +41,71 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_title!),
-        actions: (auth.currentUser == null)
-            ? []
-            : [
-                IconButton(
-                    onPressed: () {
-                      auth.signOut();
-                    },
-                    icon: Icon(Icons.exit_to_app))
-              ],
-      ),
-      body: Column(
-        children: [
-          Container(
-              width: 150,
-              height: 150,
-              child: CachedNetworkImage(
-                imageUrl: _photoUrl!,
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        image: imageProvider, fit: BoxFit.cover),
-                  ),
+    Widget body = Column(
+      children: [
+        Container(
+            width: 150,
+            height: 150,
+            child: CachedNetworkImage(
+              imageUrl: _photoUrl!,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image:
+                      DecorationImage(image: imageProvider, fit: BoxFit.cover),
                 ),
-                placeholder: (context, url) =>
-                    Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              )),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/images/instagram.png',
-                  width: 20, height: 20, fit: BoxFit.cover),
-              Text("https://www.instagram.com/pauline_cake/",
-                  style: TextStyle(
-                      decoration: TextDecoration.underline, color: Colors.blue))
-            ],
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                List updates = await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EditProfile()));
-                await auth.currentUser!.reload();
-                setState(() {
-                  if (updates.contains('avatar')) {
-                    _photoUrl = _getAvatarUrl();
-                  }
-                  if (updates.contains('name')) {
-                    _title = _getDisplayName();
-                  }
-                });
-              },
-              child: Text('Редактировать профиль'))
-        ],
-      ),
+              ),
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            )),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/images/instagram.png',
+                width: 20, height: 20, fit: BoxFit.cover),
+            Text("https://www.instagram.com/pauline_cake/",
+                style: TextStyle(
+                    decoration: TextDecoration.underline, color: Colors.blue))
+          ],
+        ),
+        ElevatedButton(
+            onPressed: () async {
+              List updates = await Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => EditProfile()));
+              await auth.currentUser!.reload();
+              setState(() {
+                if (updates.contains('avatar')) {
+                  _photoUrl = _getAvatarUrl();
+                }
+                if (updates.contains('name')) {
+                  _title = _getDisplayName();
+                }
+              });
+            },
+            child: Text('Редактировать профиль'))
+      ],
     );
+    if (widget.withAppBar) {
+      return Scaffold(
+          appBar: widget.withAppBar
+              ? AppBar(
+                  title: Text(_title!),
+                  actions: (auth.currentUser == null)
+                      ? []
+                      : [
+                          IconButton(
+                              onPressed: () {
+                                auth.signOut();
+                              },
+                              icon: Icon(Icons.exit_to_app))
+                        ],
+                )
+              : null,
+          body: body);
+    } else {
+      return body;
+    }
   }
 
   String? _getAvatarUrl() {

@@ -30,11 +30,11 @@
                         "endOffsets": "151"
                     },
                     "to": {
-                        "startLines": "20",
+                        "startLines": "21",
                         "startColumns": "4",
-                        "startOffsets": "2600",
+                        "startOffsets": "2674",
                         "endColumns": "100",
-                        "endOffsets": "2696"
+                        "endOffsets": "2770"
                     }
                 },
                 {
@@ -52,6 +52,23 @@
                         "startOffsets": "1188",
                         "endColumns": "190",
                         "endOffsets": "1374"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Familia\\.gradle\\caches\\transforms-2\\files-2.1\\1c075310296ee9585f35188ad9e1b8a0\\jetified-firebase-messaging-22.0.0\\res\\values-am\\values.xml",
+                    "from": {
+                        "startLines": "4",
+                        "startColumns": "0",
+                        "startOffsets": "207",
+                        "endColumns": "69",
+                        "endOffsets": "276"
+                    },
+                    "to": {
+                        "startLines": "20",
+                        "startColumns": "4",
+                        "startOffsets": "2600",
+                        "endColumns": "73",
+                        "endOffsets": "2669"
                     }
                 }
             ]

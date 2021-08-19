@@ -5,7 +5,9 @@ import 'package:pastry/models/orders.dart';
 import 'package:pastry/screens/orders/order_registration.dart';
 
 class Orders extends StatefulWidget {
-  const Orders({Key? key}) : super(key: key);
+  final bool withAppBar;
+
+  const Orders({Key? key, required this.withAppBar}) : super(key: key);
 
   @override
   _OrdersState createState() => _OrdersState();
@@ -28,61 +30,66 @@ class _OrdersState extends State<Orders> {
     // _getOrdersViaOrders().then((value) => setState(() {
     //       _orders = value;
     //     }));
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Pastry'),
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  Order order = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => OrderRegistration()));
-                  if (_itemNum == 1) {
-                    List<Order> orders = [order];
-                    if (_orders != null && _orders!.isNotEmpty) {
-                      orders.addAll(_orders!);
-                    }
-                    setState(() {
-                      // _listView = Center(child: Text('Success'));
-                      _orders = orders;
-                    });
-                  }
-                },
-                icon: Icon(Icons.add))
-          ],
+    Widget body = Column(
+      children: [
+        DropdownButton<String>(
+          value: _items[_itemNum],
+          isExpanded: true,
+          elevation: 16,
+          underline: Container(
+            height: 2,
+            color: Colors.deepPurpleAccent,
+          ),
+          onChanged: (String? newValue) {
+            setState(() {
+              _itemNum = _items.indexOf(newValue!);
+            });
+            _getOrdersViaOrders().then((value) => setState(() {
+                  _orders = value;
+                }));
+          },
+          items: _items.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Center(child: Text(value)),
+            );
+          }).toList(),
         ),
-        body: Column(
-          children: [
-            DropdownButton<String>(
-              value: _items[_itemNum],
-              isExpanded: true,
-              elevation: 16,
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _itemNum = _items.indexOf(newValue!);
-                });
-                _getOrdersViaOrders().then((value) => setState(() {
-                      _orders = value;
-                    }));
-              },
-              items: _items.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Center(child: Text(value)),
-                );
-              }).toList(),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                  onRefresh: _updateList, child: getOrdersListView(_orders)),
-            )
-          ],
-        ));
+        Expanded(
+          child: RefreshIndicator(
+              onRefresh: _updateList, child: getOrdersListView(_orders)),
+        )
+      ],
+    );
+    if (widget.withAppBar) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text('Pastry'),
+            actions: [
+              IconButton(
+                  onPressed: () async {
+                    Order order = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => OrderRegistration()));
+                    if (_itemNum == 1) {
+                      List<Order> orders = [order];
+                      if (_orders != null && _orders!.isNotEmpty) {
+                        orders.addAll(_orders!);
+                      }
+                      setState(() {
+                        // _listView = Center(child: Text('Success'));
+                        _orders = orders;
+                      });
+                    }
+                  },
+                  icon: Icon(Icons.add))
+            ],
+          ),
+          body: body);
+    } else {
+      return body;
+    }
   }
 
   Future _updateList() async {

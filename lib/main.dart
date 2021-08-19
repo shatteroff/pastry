@@ -5,12 +5,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:pastry/screens/main_screen_mobile.dart';
+import 'package:pastry/screens/main/main_screen_mobile.dart';
 import 'package:pastry/screens/login/login.dart';
+import 'package:pastry/screens/main/main_screen_web.dart';
 
 import 'generated/l10n.dart';
 
@@ -18,14 +20,23 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 final firebase_storage.FirebaseStorage storage =
     firebase_storage.FirebaseStorage.instance;
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
+// final FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 bool get isMobileDevice => !kIsWeb && (Platform.isIOS || Platform.isAndroid);
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  print(isMobileDevice);
-  runApp(App());
+  if (isMobileDevice) {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  runApp(MaterialApp(home: App()));
 }
 
 /// We are using a StatefulWidget such that we only create the [Future] once,
@@ -43,17 +54,43 @@ class _AppState extends State<App> {
   User? _user;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    // getToken();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       setState(() {
         _user = user;
       });
     });
+    if (isMobileDevice) {
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        print('Got a message whilst in the foreground!');
+        print('Message data: ${message.data}');
+
+        if (message.notification != null) {
+          print(
+              'Message also contained a notification: ${message.notification}');
+        }
+      });
+    }
+  }
+
+  double getScreenWidth(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    return width;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isMobileLayout = getScreenWidth(context) < 420;
     Widget body = LoginScreen(isMobile: isMobileDevice);
     if (_user != null) {
       // print(_user);
       // print(auth.currentUser);
-      body = MyStatefulWidget();
+      body = MainScreenMobileWidget();
+      if (!isMobileLayout) {
+        body = MainScreenWebWidget();
+      }
     }
     return MaterialApp(
         localizationsDelegates: [
@@ -92,29 +129,12 @@ class _AppState extends State<App> {
         //   ),
         );
   }
-}
 
-// class MainScreen extends StatelessWidget {
-//   const MainScreen({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     // if (_auth.currentUser != null) {
-//     return Container(
-//       child: Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             _auth.signOut();
-//           },
-//           child: Text('sign out'),
-//         ),
-//       ),
-//     );
-//     // } else {
-//     //   return loginScreen;
-//     // }
-//   }
+// getToken() async {
+//   String? token = await messaging.getToken();
+//   print(token);
 // }
+}
 
 TextEditingController emailController = new TextEditingController();
 TextEditingController passwordController = new TextEditingController();

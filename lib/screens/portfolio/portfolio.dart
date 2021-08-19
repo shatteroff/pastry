@@ -11,7 +11,9 @@ import 'package:flutter/services.dart';
 import '../../main.dart';
 
 class Portfolio extends StatefulWidget {
-  const Portfolio({Key? key}) : super(key: key);
+  final bool withAppBar;
+
+  const Portfolio({Key? key, required this.withAppBar}) : super(key: key);
 
   @override
   _PortfolioState createState() {
@@ -32,14 +34,19 @@ class _PortfolioState extends State<Portfolio>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Pastry'),
-          actions: [
-            IconButton(onPressed: _openFileExplorer, icon: Icon(Icons.add))
-          ],
-        ),
-        body: RefreshIndicator(onRefresh: _updateGrid, child: _imageGrid));
+    Widget body = RefreshIndicator(onRefresh: _updateGrid, child: _imageGrid);
+    if (widget.withAppBar) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text('Pastry'),
+            actions: [
+              IconButton(onPressed: _openFileExplorer, icon: Icon(Icons.add))
+            ],
+          ),
+          body: body);
+    } else {
+      return body;
+    }
   }
 
   _openFileExplorer() async {
